@@ -1,9 +1,7 @@
+
 from datetime import datetime
-
-
 #Clase para los eventos del estadio
 class Event:
-
     #Diferentes eventos posibles
     Events = ["Partido oficial", "Partido amistoso", "Concierto", "Entrenamiento"
               "Galas benéfica", "Tour por el museo del club",
@@ -23,16 +21,6 @@ class Event:
     
     def Duration(a):
         pass
-                
-
     
-
-    
-      
-        
-
-
-
-    
-
-    
+    def Space(a):
+        pass
