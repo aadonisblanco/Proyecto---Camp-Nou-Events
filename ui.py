@@ -8,7 +8,7 @@ class EventOrganizerUI:
         self.root.geometry("900x700")
         self.root.configure(bg="#f0f0f0")
         
-        # Variables para los datos del evento
+        # Variables para los datos del eventocz
         self.event_name_var = tk.StringVar()
         self.event_date_var = tk.StringVar()
         self.event_time_var = tk.StringVar()
@@ -97,10 +97,10 @@ class EventOrganizerUI:
         
         # Capacidad
         tk.Label(right_column, text="Capacidad estimada:", font=("Arial", 10, "bold"), 
-                bg="white", anchor="w").grid(row=1, column=0, sticky="w", pady=(15, 5))
+                bg="white", anchor="w").grid(row=2, column=0, sticky="w", pady=(15, 5))
         
         capacity_frame = tk.Frame(right_column, bg="white")
-        capacity_frame.grid(row=2, column=0, sticky="ew", pady=(0, 15))
+        capacity_frame.grid(row=3, column=0, sticky="ew", pady=(0, 15))
         
         tk.Entry(capacity_frame, textvariable=self.event_capacity_var, 
                 font=("Arial", 11), width=20).pack(side=tk.LEFT, padx=(0, 10))
@@ -108,11 +108,11 @@ class EventOrganizerUI:
                 font=("Arial", 10)).pack(side=tk.LEFT)
         
         # Descripción (área de texto)
-        tk.Label(right_column, text="Descripción:", font=("Arial", 10, "bold"), 
-                bg="white", anchor="w").grid(row=3, column=0, sticky="w", pady=(15, 5))
+        tk.Label(right_column, text="Descripción:", font=("Arial", 10, "bold"),
+                bg="white", anchor="w").grid(row=4, column=0, sticky="w", pady=(15, 5))
         
         desc_frame = tk.Frame(right_column, bg="white", height=100)
-        desc_frame.grid(row=4, column=0, sticky="ew", pady=(0, 15))
+        desc_frame.grid(row=5, column=0, sticky="ew", pady=(0, 15))
         desc_frame.grid_propagate(False)
         
         self.desc_text = tk.Text(desc_frame, font=("Arial", 11), height=5, width=40)
@@ -294,15 +294,54 @@ class EventOrganizerUI:
         
     def get_form_data(self):
         """Obtiene los datos del formulario como diccionario"""
+        # Función para limpiar y convertir valores
+        def procesar_valor(valor, placeholder, es_numero=False):
+            # Si es igual al placeholder, devolver vacío/cero
+            if valor == placeholder:
+                return "" if not es_numero else "0"
+            
+            # Limpiar espacios
+            valor = valor.strip()
+            
+            # Si es número y está vacío, devolver cero
+            if es_numero and not valor:
+                return "0"
+                
+            return valor
+        
+        # Diccionario de placeholders exactos
+        placeholders = {
+            'nombre': 'Ej: Partido de Liga',
+            'fecha': 'Ej: 15/12/2024', 
+            'hora': 'Ej: 21:00',
+            'duracion': 'Ej: 2.5',
+            'tipo': 'Ej: Partido, Concierto, etc.',
+            'ubicacion': 'Ej: Tribuna Principal'
+        }
+        
+        # Procesar cada campo
+        nombre = procesar_valor(self.event_name_var.get(), placeholders['nombre'])
+        fecha = procesar_valor(self.event_date_var.get(), placeholders['fecha'])
+        hora = procesar_valor(self.event_time_var.get(), placeholders['hora'])
+        duracion = procesar_valor(self.event_duration_var.get(), placeholders['duracion'], es_numero=True)
+        tipo = procesar_valor(self.event_type_var.get(), placeholders['tipo'])
+        ubicacion = procesar_valor(self.event_location_var.get(), placeholders['ubicacion'])
+        capacidad = self.event_capacity_var.get().strip()
+        descripcion = self.desc_text.get("1.0", tk.END).strip()
+        
+        # Convertir capacidad vacía a "0"
+        if not capacidad:
+            capacidad = "0"
+        
         return {
-            "name": self.event_name_var.get(),
-            "date": self.event_date_var.get(),
-            "time": self.event_time_var.get(),
-            "duration": self.event_duration_var.get(),
-            "type": self.event_type_var.get(),
-            "location": self.event_location_var.get(),
-            "description": self.desc_text.get("1.0", tk.END).strip(),
-            "capacity": self.event_capacity_var.get()
+            "nombre": nombre,
+            "fecha": fecha,
+            "hora": hora,
+            "duracion": duracion,
+            "tipo": tipo,
+            "ubicacion": ubicacion,
+            "descripcion": descripcion,
+            "capacidad": capacidad
         }
         
     def display_events(self, events_list):
