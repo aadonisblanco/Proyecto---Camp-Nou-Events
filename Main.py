@@ -1,8 +1,8 @@
 # main.py
-# main.py
 import tkinter as tk
 import sys
 import os
+import audio_manager
 
 # Asegurar que Python encuentre los módulos locales
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -11,9 +11,9 @@ from ui import EventOrganizerUI
 from Controller import ControladorEventos
 
 class AplicacionPrincipal:
-    """Clase principal de la aplicación"""
-    
     def __init__(self):
+        """Inicializa la aplicación principal"""
+        # Crear ventana principal
         self.root = tk.Tk()
         self.setup_window()
         
@@ -30,12 +30,7 @@ class AplicacionPrincipal:
         """Configura la ventana principal"""
         self.root.title("Organizador de Eventos - Camp Nou")
         self.root.geometry("1000x750")
-        
-        # Icono de la ventana (opcional)
-        try:
-            self.root.iconbitmap("camp_nou.ico")
-        except:
-            pass
+        self.root.configure(bg="#f0f0f0")
         
         # Centrar ventana en pantalla
         self.root.update_idletasks()
@@ -47,22 +42,30 @@ class AplicacionPrincipal:
     
     def cerrar_aplicacion(self):
         """Maneja el cierre de la aplicación"""
-        # Aquí podrías agregar confirmación o guardado automático
+        audio_manager.audio_manager.stop() 
         self.root.destroy()
+       
     
     def ejecutar(self):
         """Ejecuta la aplicación"""
         self.root.mainloop()
 
+
 def main():
     """Función principal"""
     try:
+        print("="*50)
+        print("Organizador de Eventos - Camp Nou")
+        print("="*50)
+        
         app = AplicacionPrincipal()
         app.ejecutar()
+        
     except Exception as e:
         print(f"Error al iniciar la aplicación: {e}")
         import traceback
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     main()
